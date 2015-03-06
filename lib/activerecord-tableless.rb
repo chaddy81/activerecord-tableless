@@ -94,7 +94,9 @@ module ActiveRecord
             native_type = ActiveRecord::Base.connection.native_database_types[sql_type.to_sym]
             sql_type = native_type.fetch(:name) unless native_type.nil?
           end
+          puts sql_type
           cast_type = ActiveRecord::Base.connection.send :lookup_cast_type, sql_type
+          puts cast_type
           tableless_options[:columns] << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, cast_type, sql_type.to_s, null)
         end
       else
