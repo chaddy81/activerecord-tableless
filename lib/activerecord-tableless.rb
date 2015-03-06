@@ -96,8 +96,8 @@ module ActiveRecord
           end
           puts sql_type
           cast_type = ActiveRecord::Base.connection.send :lookup_cast_type, sql_type
-          puts cast_type
-          tableless_options[:columns] << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, cast_type, sql_type.to_s, null)
+          puts cast_type.to_yaml
+          tableless_options[:columns] << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, cast_type.to_s, sql_type.to_s, null)
         end
       else
         def column(name, sql_type = nil, default = nil, null = true)
