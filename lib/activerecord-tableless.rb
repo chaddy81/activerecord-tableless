@@ -90,7 +90,11 @@ module ActiveRecord
         # This stopped working in Rails 4.2.0.betaX.  This hopefully fixes it.
         def column(name, sql_type = nil, default = nil, null = true)
           # from https://github.com/activescaffold/active_scaffold/blob/master/lib/active_scaffold/tableless.rb
-          cast_type = ActiveRecord::Base.connection.send :lookup_cast_type, sql_type.to_s
+          if !sql_type.nil? && ActiveRecord::Base.connection.respond_to?(:native_database_types)
+            native_type = ActiveRecord::Base.connection.native_database_types[sql_type.to_sym]
+            sql_type = native_type.fetch(:name) unless native_type.nil?
+          end
+          cast_type = ActiveRecord::Base.connection :lookup_cast_type, sql_type
           tableless_options[:columns] << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, cast_type.to_s, sql_type.to_s, null)
         end
       else
